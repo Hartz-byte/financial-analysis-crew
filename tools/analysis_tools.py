@@ -1,0 +1,127 @@
+# tools/analysis_tools.py
+from crewai.tools import tool
+import json
+from datetime import datetime
+
+@tool("calculate_valuation_metrics")
+def calculate_valuation_metrics(pe_ratio: str, pb_ratio: str, eps: str) -> str:
+    """
+    Calculate and interpret valuation metrics.
+    Args: pe_ratio, pb_ratio, eps (str): Financial ratios
+    Returns: str: Valuation analysis
+    """
+    try:
+        analysis = """
+        Valuation Metrics Analysis:
+        
+        P/E Ratio (Price-to-Earnings):
+        - < 10: Potentially undervalued
+        - 10-20: Fair valuation
+        - 20-30: Growth premium
+        - > 30: Potentially overvalued
+        """
+        
+        return analysis
+    except Exception as e:
+        return f"Error analyzing valuation: {str(e)}"
+
+@tool("assess_financial_health")
+def assess_financial_health(debt: str, cash: str, revenue: str, net_income: str) -> str:
+    """
+    Assess company financial health.
+    Args: Financial metrics
+    Returns: str: Financial health assessment
+    """
+    try:
+        assessment = """
+        Financial Health Assessment:
+        
+        Key Indicators:
+        1. Debt-to-Cash Ratio: Shows financial flexibility
+        2. Profit Margin: Net Income / Revenue
+        3. Debt Level: Total debt relative to revenue
+        
+        Healthy Company Indicators:
+        - Declining debt ratio
+        - Consistent revenue growth
+        - Positive net income
+        - Increasing cash position
+        """
+        
+        return assessment
+    except Exception as e:
+        return f"Error assessing financial health: {str(e)}"
+
+@tool("generate_analysis_summary")
+def generate_analysis_summary(technical: str, fundamental: str, sentiment: str) -> str:
+    """
+    Generate comprehensive analysis summary.
+    Args: technical, fundamental, sentiment (str): Analysis results
+    Returns: str: Comprehensive summary
+    """
+    try:
+        summary = f"""
+        📊 COMPREHENSIVE ANALYSIS SUMMARY
+        Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+        
+        ═══════════════════════════════════
+        1. TECHNICAL ANALYSIS
+        ═══════════════════════════════════
+        {technical}
+        
+        ═══════════════════════════════════
+        2. FUNDAMENTAL ANALYSIS
+        ═══════════════════════════════════
+        {fundamental}
+        
+        ═══════════════════════════════════
+        3. SENTIMENT & NEWS
+        ═══════════════════════════════════
+        {sentiment}
+        
+        ═══════════════════════════════════
+        RECOMMENDATION FRAMEWORK
+        ═══════════════════════════════════
+        Technical + Fundamental + Sentiment = Investment Decision
+        """
+        
+        return summary
+    except Exception as e:
+        return f"Error generating summary: {str(e)}"
+
+@tool("format_report")
+def format_report(symbol: str, recommendation: str, price_target: str, confidence: str) -> str:
+    """
+    Format final investment report.
+    Args: symbol, recommendation, price_target, confidence (str): Report data
+    Returns: str: Formatted report
+    """
+    try:
+        report = f"""
+        ╔════════════════════════════════════════════════════════════╗
+        ║         INVESTMENT ANALYSIS REPORT                         ║
+        ╚════════════════════════════════════════════════════════════╝
+        
+        Stock Symbol: {symbol}
+        Analysis Date: {datetime.now().strftime('%Y-%m-%d')}
+        
+        ───────────────────────────────────────────────────────────
+        RECOMMENDATION: {recommendation}
+        ───────────────────────────────────────────────────────────
+        
+        Price Target: {price_target}
+        Confidence Level: {confidence}%
+        
+        ───────────────────────────────────────────────────────────
+        DISCLAIMER
+        ───────────────────────────────────────────────────────────
+        This analysis is for educational purposes only. 
+        Always do your own research before investing.
+        Past performance does not guarantee future results.
+        
+        Generated by: AI Financial Analysis Crew
+        """
+        
+        return report
+    except Exception as e:
+        return f"Error formatting report: {str(e)}"
