@@ -24,6 +24,7 @@ def create_financial_crew(stock_symbol: str) -> Crew:
         process=Process.sequential,  # Tasks run one after another
         verbose=True,
         memory=False,  # Disabled to avoid OpenAI embedding requirement
+        cache=True,
         max_rpm=100,  # Rate limiting
     )
     

@@ -116,6 +116,13 @@ def create_tasks(stock_symbol: str):
         - Position sizing recommendation
         
         Use the context from all three analysts' findings to make a confident decision.
+        
+        IMPORTANT: Your final action MUST be to call the `format_report` tool.
+        When calling `format_report`, you MUST extract and provide:
+        - `current_price` (from Market Research)
+        - `rsi` (from Technical Analysis)
+        - `pe_ratio` (from Fundamental Analysis)
+        along with your recommendation, price_target, and confidence.
         """,
         expected_output=f"""
         INVESTMENT RECOMMENDATION FOR {stock_symbol}
