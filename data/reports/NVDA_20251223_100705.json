@@ -1,0 +1,5 @@
+{
+  "symbol": "NVDA",
+  "analysis_date": "2025-12-23T10:07:05.499261",
+  "report": "`{\n    \"symbol\": \"NVDA\",\n    \"recommendation\": \"Hold\",\n    \"price_target\": \"\",\n    \"confidence\": \"70%\",\n    \"current_price\": \"180.99\",\n    \"rsi\": \"51.29\",\n    \"pe_ratio\": \"44.8\"\n}`"
+}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
 import {
-  Loader2, TrendingUp, TrendingDown, DollarSign, Activity,
+  Loader2, TrendingUp, DollarSign, Activity,
   Newspaper, BarChart3, PieChart, ShieldCheck, AlertTriangle
 } from 'lucide-react';
 import clsx from 'clsx';
@@ -20,19 +20,9 @@ const API_URL = 'http://localhost:8000';
 // Note: This relies on the specific format output by the agents.
 // If agents change format, this might break, but fallback is raw markdown.
 
-function parseMetric(text: string, regex: RegExp): string | null {
-  const match = text.match(regex);
-  return match ? match[1] : null;
-}
 
-function extractSection(text: string, header: string): string {
-  const parts = text.split(header);
-  if (parts.length > 1) {
-    // Return content until next header or end
-    return parts[1].split(/#{1,3} /)[0].trim();
-  }
-  return '';
-}
+
+
 
 function App() {
   const [symbol, setSymbol] = useState('');
@@ -94,32 +84,39 @@ function App() {
   }, [taskId, status]);
 
   const parseResults = (text: string) => {
-    // 1. Current Price
-    const price = parseMetric(text, /Current Price:.*\$([\d,]+\.?\d*)/i);
+    const cleanText = (str: string) => str.replace(/[*#_\[\]]/g, '').trim();
 
-    // 2. Recommendation
-    const rec = parseMetric(text, /## RECOMMENDATION:\s*(.*)/i) ||
-      parseMetric(text, /RECOMMENDATION:\s*(.*)/i);
+    // 1. Current Price - Handle "$", "**", or just number
+    const priceMatch = text.match(/Current Price[:\s]+.*?\$?([\d,]+\.?\d*)/i);
+    const price = priceMatch ? priceMatch[1] : undefined;
+
+    // 2. Recommendation - Handle "## RECOMMENDATION: Buy" or "**Recommendation**: Buy"
+    const recMatch = text.match(/RECOMMENDATION[:\s]+(.*?)(?:\n|$)/i);
+    const rec = recMatch ? cleanText(recMatch[1]) : undefined;
 
     // 3. Price Target
-    const target = parseMetric(text, /Price Target:.*\$([\d,]+\.?\d*)/i);
+    const targetMatch = text.match(/Price Target[:\s]+.*?\$?([\d,]+\.?\d*)/i);
+    const target = targetMatch ? targetMatch[1] : undefined;
 
     // 4. Confidence
-    const confidence = parseMetric(text, /Confidence(?: Level)?:.*?(\d+%?)/i);
+    const confMatch = text.match(/Confidence(?: Level)?[:\s]+.*?(\d+(?:\.\d+)?%?)/i);
+    const confidence = confMatch ? confMatch[1] : undefined;
 
     // 5. RSI
-    const rsi = parseMetric(text, /RSI:.*?([\d.]+)/i);
+    const rsiMatch = text.match(/RSI[:\s]+.*?([\d.]+)/i);
+    const rsi = rsiMatch ? rsiMatch[1] : undefined;
 
     // 6. P/E
-    const pe = parseMetric(text, /P\/E Ratio:.*?([\d.]+)/i);
+    const peMatch = text.match(/P\/E(?: Ratio)?[:\s]+.*?([\d.]+)/i);
+    const pe = peMatch ? peMatch[1] : undefined;
 
     setParsedData({
-      price: price || undefined,
-      recommendation: rec?.replace(/[\[\]]/g, '').trim() || undefined,
-      target: target || undefined,
-      confidence: confidence || undefined,
-      rsi: rsi || undefined,
-      pe: pe || undefined,
+      price,
+      recommendation: rec,
+      target,
+      confidence,
+      rsi,
+      pe,
     });
   };
 
@@ -275,7 +272,21 @@ function App() {
                 </h3>
               </div>
               <article className="prose prose-slate max-w-none p-8 prose-headings:font-bold prose-h1:text-3xl prose-h2:text-2xl prose-a:text-blue-600 hover:prose-a:text-blue-500 overflow-x-auto break-words">
-                <ReactMarkdown>{rawResult || ''}</ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                    h1: ({ node, ...props }) => <h1 className="text-3xl font-extrabold text-slate-900 border-b-2 border-slate-200 pb-4 mb-6 mt-2" {...props} />,
+                    h2: ({ node, ...props }) => <h2 className="text-2xl font-bold text-slate-800 mt-8 mb-4 flex items-center gap-2 after:content-[''] after:h-px after:flex-1 after:bg-slate-200" {...props} />,
+                    h3: ({ node, ...props }) => <h3 className="text-xl font-bold text-slate-700 mt-6 mb-3" {...props} />,
+                    p: ({ node, ...props }) => <p className="text-slate-600 leading-relaxed mb-4 text-lg" {...props} />,
+                    ul: ({ node, ...props }) => <ul className="list-disc list-outside ml-6 space-y-2 mb-6 text-slate-600" {...props} />,
+                    li: ({ node, ...props }) => <li className="pl-1" {...props} />,
+                    strong: ({ node, ...props }) => <strong className="font-bold text-slate-900" {...props} />,
+                    blockquote: ({ node, ...props }) => <blockquote className="border-l-4 border-blue-500 pl-4 py-1 my-4 bg-blue-50 text-slate-700 italic rounded-r-lg" {...props} />,
+                    code: ({ node, ...props }) => <code className="bg-slate-100 text-slate-800 px-1.5 py-0.5 rounded text-sm font-mono border border-slate-200" {...props} />,
+                  }}
+                >
+                  {rawResult || ''}
+                </ReactMarkdown>
               </article>
             </div>
 

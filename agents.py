@@ -2,8 +2,6 @@
 from crewai import Agent, LLM
 
 from config import (
-    GEMINI_API_KEY,
-    GEMINI_MODEL,
     OLLAMA_BASE_URL,
     OLLAMA_MODEL
 )
@@ -33,11 +31,7 @@ ollama_llm = LLM(
     temperature=0.7,
 )
 
-gemini_llm = LLM(
-    model=GEMINI_MODEL,
-    api_key=GEMINI_API_KEY,
-    temperature=0.7,
-)
+
 
 # ============= AGENT 1: MARKET RESEARCHER =============
 market_researcher = Agent(
@@ -99,7 +93,16 @@ portfolio_manager = Agent(
     backstory="""You are a senior portfolio manager with 20+ years of experience managing billions.
     You excel at synthesizing technical, fundamental, and sentiment analysis into clear investment
     decisions. You balance risk/reward, consider multiple timeframes, and provide confident
-    recommendations backed by strong reasoning. You're known for your pragmatic, data-driven approach.""",
+    recommendations backed by strong reasoning.
+    
+    IMPORTANT: You MUST use the `format_report` tool to generate the final output.
+    When using `format_report`, you MUST extract and pass the specific metrics found by
+    the other agents:
+    - 'current_price' (from Market Researcher)
+    - 'rsi' (from Technical Analyst)
+    - 'pe_ratio' (from Fundamental Analyst)
+    - 'price_target', 'recommendation', 'confidence' (your synthesis)
+    Do not leave these fields as 'N/A' if the data exists in the context.""",
     tools=[
         format_report,
         generate_analysis_summary,
