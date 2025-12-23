@@ -118,37 +118,28 @@ def create_tasks(stock_symbol: str):
         Use the context from all three analysts' findings to make a confident decision.
         
         IMPORTANT: Your final action MUST be to call the `format_report` tool.
-        When calling `format_report`, you MUST extract and provide:
-        - `current_price` (from Market Research)
-        - `rsi` (from Technical Analysis)
-        - `pe_ratio` (from Fundamental Analysis)
-        along with your recommendation, price_target, and confidence.
+        You MUST provide ALL the following arguments:
+        - `symbol`
+        - `recommendation`
+        - `price_target`
+        - `confidence`
+        - `current_price`
+        - `rsi`
+        - `pe_ratio` // Extract this from the Fundamental Analysis
+
+        Example Tool Input:
+        symbol: "NVDA"
+        recommendation: "Buy"
+        price_target: "$210"
+        confidence: "85%"
+        current_price: "$180.99"
+        rsi: "51.29"
+        pe_ratio: "44.8"
+        
+        CRITICAL: Your 'Final Answer' MUST be the exact raw string returned by this tool.
+        Do NOT summarize it. Just return the tool output.
         """,
-        expected_output=f"""
-        INVESTMENT RECOMMENDATION FOR {stock_symbol}
-        
-        Recommendation: [BUY/SELL/HOLD]
-        Price Target: $[X.XX]
-        Confidence: [0-100]%
-        
-        Executive Summary:
-        - Brief overview of recommendation rationale
-        - Key reasons for recommendation
-        - Main risks to watch
-        - Catalysts for upside/downside
-        
-        Detailed Analysis:
-        - Technical perspective summary
-        - Fundamental perspective summary
-        - Sentiment and market perspective summary
-        
-        Position Recommendation:
-        - Entry price
-        - Exit price (stop loss)
-        - Position size (if investing $10,000)
-        
-        Timeframe: 6-12 months
-        """,
+        expected_output="The exact string returned by the `format_report` tool.",
         agent=portfolio_manager,
         async_execution=False,
     )

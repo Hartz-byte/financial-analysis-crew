@@ -81,7 +81,7 @@ Technical + Fundamental + Sentiment = Investment Decision
         return f"Error generating summary: {str(e)}"
 
 @tool("format_report")
-def format_report(symbol: str, recommendation: str, price_target: str, confidence: str, current_price: str = "N/A", rsi: str = "N/A", pe_ratio: str = "N/A") -> str:
+def format_report(symbol: str = "UNKNOWN", recommendation: str = "HOLD", price_target: str = "N/A", confidence: str = "N/A", current_price: str = "N/A", rsi: str = "N/A", pe_ratio: str = "N/A") -> str:
     """
     Format final investment report.
     Args: symbol, recommendation, price_target, confidence, current_price, rsi, pe_ratio (str): Report data
@@ -90,13 +90,16 @@ def format_report(symbol: str, recommendation: str, price_target: str, confidenc
     try:
         report = f"""
 # INVESTMENT ANALYSIS REPORT
+
 **Stock Symbol:** {symbol}
+
 **Analysis Date:** {datetime.now().strftime('%Y-%m-%d')}
 
 ## RECOMMENDATION: {recommendation}
 
 **Price Target:** {price_target}
-**Confidence Level:** {confidence}%
+
+**Confidence Level:** {confidence}
 
 ## KEY METRICS
 - **Current Price:** {current_price}

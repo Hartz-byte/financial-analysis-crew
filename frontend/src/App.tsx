@@ -143,7 +143,7 @@ function App() {
               <TrendingUp size={24} />
             </div>
             <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-700 to-indigo-600">
-              Antigravity Finance
+              Finance Analysis Crew
             </h1>
           </div>
           <div className={`px-4 py-1.5 rounded-full text-sm font-medium border flex items-center gap-2 ${getStatusColor()}`}>
